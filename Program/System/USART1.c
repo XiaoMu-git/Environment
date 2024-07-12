@@ -7,7 +7,11 @@
 
 USART_DataStruct usart1_data;
 
-// 初始化
+/**
+  * @brief  初始化引脚、串口1、配置
+  * @param  无
+  * @retval 无
+  */
 void USART1_Init(void) {
 	// 1.配置GPIO
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
@@ -47,20 +51,33 @@ void USART1_Init(void) {
 	USART_Cmd(USART1, ENABLE);
 }
 
-// 发送一个字节
+/**
+  * @brief  发送一个字节
+  * @param  byte 需要发送的字节
+  * @retval 无
+  */
 void USART1_SendByte(uint8_t byte) {
 	USART_SendData(USART1, byte);	// 数据写入发送寄存器
 	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
 }
 
-// 发送字符串
+/**
+  * @brief  发送字符串
+  * @param  str 需要发送的字符串
+  * @retval 无
+  */
 void USART1_SendString(char* str) {
 	for (uint16_t i = 0; str[i] != '\0'; i++) USART1_SendByte(str[i]);
 }
 
-// 使用格式化发送数据
+/**
+  * @brief  使用字符串格式化发送数据
+  * @param  format 需要发送的格式串
+  * @param  ... 格式串中填充的变量
+  * @retval 无
+  */
 void USART1_Printf(char* format, ...) {
-	char str[1024];
+	char str[256];
 	va_list arg;
 	va_start(arg, format);
 	vsprintf(str, format, arg);
@@ -68,20 +85,32 @@ void USART1_Printf(char* format, ...) {
 	USART1_SendString(str);
 }
 
-// 清空缓存
+/**
+  * @brief  清空缓存区数据
+  * @param  无
+  * @retval 无
+  */
 void USART1_Clear(void) {
 	memset(usart1_data.data, 0, sizeof(usart1_data.data));
 	usart1_data.size = 0;
 }
 
-// 检查是否现在可以读取
+/**
+  * @brief  检查是否现在可以读取
+  * @param  无
+  * @retval 可以返回1 不可以返回0
+  */
 uint8_t USART1_DataFlag(void) {
 	uint8_t size = usart1_data.size;
 	Delay_ms(10);
 	return usart1_data.size == size && size > 0;
 }
 
-// 中断函数
+/**
+  * @brief  USART1的中断函数
+  * @param  无
+  * @retval 无
+  */
 void USART1_IRQHandler(void) {
     if (USART_GetITStatus(USART1, USART_IT_RXNE) == SET) {
 		uint8_t recv_byte = USART_ReceiveData(USART1);

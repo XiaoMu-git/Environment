@@ -1,5 +1,5 @@
-#ifndef __OLED_H
-#define __OLED_H
+#ifndef _OLED_H_
+#define _OLED_H_
 
 void OLED_Init(void);
 void OLED_Clear(void);

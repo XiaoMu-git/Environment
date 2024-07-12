@@ -6,9 +6,12 @@
 #define OLED_W_SCL(x)		GPIO_WriteBit(GPIOB, GPIO_Pin_13, (BitAction)(x))
 #define OLED_W_SDA(x)		GPIO_WriteBit(GPIOB, GPIO_Pin_12, (BitAction)(x))
 
-/*引脚初始化*/
-void OLED_I2C_Init(void)
-{
+/**
+  * @brief  引脚初始化
+  * @param  无
+  * @retval 无
+  */
+void OLED_I2C_Init(void) {
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 	
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -26,8 +29,7 @@ void OLED_I2C_Init(void)
   * @param  无
   * @retval 无
   */
-void OLED_I2C_Start(void)
-{
+void OLED_I2C_Start(void) {
 	OLED_W_SDA(1);
 	OLED_W_SCL(1);
 	OLED_W_SDA(0);
@@ -39,8 +41,7 @@ void OLED_I2C_Start(void)
   * @param  无
   * @retval 无
   */
-void OLED_I2C_Stop(void)
-{
+void OLED_I2C_Stop(void) {
 	OLED_W_SDA(0);
 	OLED_W_SCL(1);
 	OLED_W_SDA(1);
@@ -51,8 +52,7 @@ void OLED_I2C_Stop(void)
   * @param  Byte 要发送的一个字节
   * @retval 无
   */
-void OLED_I2C_SendByte(uint8_t Byte)
-{
+void OLED_I2C_SendByte(uint8_t Byte) {
 	uint8_t i;
 	for (i = 0; i < 8; i++)
 	{
@@ -69,8 +69,7 @@ void OLED_I2C_SendByte(uint8_t Byte)
   * @param  Command 要写入的命令
   * @retval 无
   */
-void OLED_WriteCommand(uint8_t Command)
-{
+void OLED_WriteCommand(uint8_t Command) {
 	OLED_I2C_Start();
 	OLED_I2C_SendByte(0x78);		//从机地址
 	OLED_I2C_SendByte(0x00);		//写命令
@@ -83,8 +82,7 @@ void OLED_WriteCommand(uint8_t Command)
   * @param  Data 要写入的数据
   * @retval 无
   */
- void OLED_WriteData(uint8_t Data)
-{
+ void OLED_WriteData(uint8_t Data) {
 	OLED_I2C_Start();
 	OLED_I2C_SendByte(0x78);		//从机地址
 	OLED_I2C_SendByte(0x40);		//写数据
@@ -98,8 +96,7 @@ void OLED_WriteCommand(uint8_t Command)
   * @param  X 以左上角为原点，向右方向的坐标，范围：0~127
   * @retval 无
   */
-void OLED_SetCursor(uint8_t Y, uint8_t X)
-{
+void OLED_SetCursor(uint8_t Y, uint8_t X) {
 	OLED_WriteCommand(0xB0 | Y);					//设置Y位置
 	OLED_WriteCommand(0x10 | ((X & 0xF0) >> 4));	//设置X位置高4位
 	OLED_WriteCommand(0x00 | (X & 0x0F));			//设置X位置低4位
@@ -110,8 +107,7 @@ void OLED_SetCursor(uint8_t Y, uint8_t X)
   * @param  无
   * @retval 无
   */
-void OLED_Clear(void)
-{  
+void OLED_Clear(void) {  
 	uint8_t i, j;
 	for (j = 0; j < 8; j++)
 	{
@@ -130,8 +126,7 @@ void OLED_Clear(void)
   * @param  Char 要显示的一个字符，范围：ASCII可见字符
   * @retval 无
   */
-void OLED_ShowChar(uint8_t Line, uint8_t Column, char Char)
-{      	
+void OLED_ShowChar(uint8_t Line, uint8_t Column, char Char) {      	
 	uint8_t i;
 	OLED_SetCursor((Line - 1) * 2, (Column - 1) * 8);		//设置光标位置在上半部分
 	for (i = 0; i < 8; i++)
@@ -152,8 +147,7 @@ void OLED_ShowChar(uint8_t Line, uint8_t Column, char Char)
   * @param  String 要显示的字符串，范围：ASCII可见字符
   * @retval 无
   */
-void OLED_ShowString(uint8_t Line, uint8_t Column, char *String)
-{
+void OLED_ShowString(uint8_t Line, uint8_t Column, char *String) {
 	uint8_t i;
 	for (i = 0; String[i] != '\0'; i++)
 	{
@@ -165,8 +159,7 @@ void OLED_ShowString(uint8_t Line, uint8_t Column, char *String)
   * @brief  OLED次方函数
   * @retval 返回值等于X的Y次方
   */
-uint32_t OLED_Pow(uint32_t X, uint32_t Y)
-{
+uint32_t OLED_Pow(uint32_t X, uint32_t Y) {
 	uint32_t Result = 1;
 	while (Y--)
 	{
@@ -183,13 +176,9 @@ uint32_t OLED_Pow(uint32_t X, uint32_t Y)
   * @param  Length 要显示数字的长度，范围：1~10
   * @retval 无
   */
-void OLED_ShowNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Length)
-{
+void OLED_ShowNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Length) {
 	uint8_t i;
-	for (i = 0; i < Length; i++)							
-	{
-		OLED_ShowChar(Line, Column + i, Number / OLED_Pow(10, Length - i - 1) % 10 + '0');
-	}
+	for (i = 0; i < Length; i++) OLED_ShowChar(Line, Column + i, Number / OLED_Pow(10, Length - i - 1) % 10 + '0');
 }
 
 /**
@@ -200,24 +189,18 @@ void OLED_ShowNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Length)
   * @param  Length 要显示数字的长度，范围：1~10
   * @retval 无
   */
-void OLED_ShowSignedNum(uint8_t Line, uint8_t Column, int32_t Number, uint8_t Length)
-{
+void OLED_ShowSignedNum(uint8_t Line, uint8_t Column, int32_t Number, uint8_t Length) {
 	uint8_t i;
 	uint32_t Number1;
-	if (Number >= 0)
-	{
+	if (Number >= 0) {
 		OLED_ShowChar(Line, Column, '+');
 		Number1 = Number;
 	}
-	else
-	{
+	else {
 		OLED_ShowChar(Line, Column, '-');
 		Number1 = -Number;
 	}
-	for (i = 0; i < Length; i++)							
-	{
-		OLED_ShowChar(Line, Column + i + 1, Number1 / OLED_Pow(10, Length - i - 1) % 10 + '0');
-	}
+	for (i = 0; i < Length; i++) OLED_ShowChar(Line, Column + i + 1, Number1 / OLED_Pow(10, Length - i - 1) % 10 + '0');
 }
 
 /**
@@ -228,20 +211,12 @@ void OLED_ShowSignedNum(uint8_t Line, uint8_t Column, int32_t Number, uint8_t Le
   * @param  Length 要显示数字的长度，范围：1~8
   * @retval 无
   */
-void OLED_ShowHexNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Length)
-{
+void OLED_ShowHexNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Length) {
 	uint8_t i, SingleNumber;
-	for (i = 0; i < Length; i++)							
-	{
+	for (i = 0; i < Length; i++) {
 		SingleNumber = Number / OLED_Pow(16, Length - i - 1) % 16;
-		if (SingleNumber < 10)
-		{
-			OLED_ShowChar(Line, Column + i, SingleNumber + '0');
-		}
-		else
-		{
-			OLED_ShowChar(Line, Column + i, SingleNumber - 10 + 'A');
-		}
+		if (SingleNumber < 10) OLED_ShowChar(Line, Column + i, SingleNumber + '0');
+		else OLED_ShowChar(Line, Column + i, SingleNumber - 10 + 'A');
 	}
 }
 
@@ -253,13 +228,9 @@ void OLED_ShowHexNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Leng
   * @param  Length 要显示数字的长度，范围：1~16
   * @retval 无
   */
-void OLED_ShowBinNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Length)
-{
+void OLED_ShowBinNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Length) {
 	uint8_t i;
-	for (i = 0; i < Length; i++)							
-	{
-		OLED_ShowChar(Line, Column + i, Number / OLED_Pow(2, Length - i - 1) % 2 + '0');
-	}
+	for (i = 0; i < Length; i++) OLED_ShowChar(Line, Column + i, Number / OLED_Pow(2, Length - i - 1) % 2 + '0');
 }
 
 /**
@@ -267,13 +238,10 @@ void OLED_ShowBinNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Leng
   * @param  无
   * @retval 无
   */
-void OLED_Init(void)
-{
-	uint32_t i, j;
-	
-	for (i = 0; i < 1000; i++)			//上电延时
-	{
-		for (j = 0; j < 1000; j++);
+void OLED_Init(void) {
+	//上电延时
+	for (uint32_t i = 0; i < 1000; i++) {
+		for (uint32_t j = 0; j < 1000; j++);
 	}
 	
 	OLED_I2C_Init();			//端口初始化

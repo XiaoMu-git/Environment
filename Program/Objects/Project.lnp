@@ -28,7 +28,6 @@
 ".\objects\stm32f10x_usart.o"
 ".\objects\stm32f10x_wwdg.o"
 ".\objects\delay.o"
-".\objects\myi2c.o"
 ".\objects\myadc.o"
 ".\objects\usart1.o"
 ".\objects\oled.o"

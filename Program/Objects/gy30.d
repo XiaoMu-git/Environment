@@ -30,4 +30,3 @@
 .\objects\gy30.o: .\Library\misc.h
 .\objects\gy30.o: Hardware\GY30.h
 .\objects\gy30.o: .\System\Delay.h
-.\objects\gy30.o: .\System\MyI2C.h

@@ -31,5 +31,8 @@
 .\objects\esp8266.o: Hardware\ESP8266.h
 .\objects\esp8266.o: .\System\USART1.h
 .\objects\esp8266.o: .\System\Delay.h
+.\objects\esp8266.o: C:\Software\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\esp8266.o: C:\Software\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 .\objects\esp8266.o: C:\Software\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\esp8266.o: C:\Software\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\esp8266.o: Hardware\OLED.h

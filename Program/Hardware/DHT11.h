@@ -1,7 +1,7 @@
 #ifndef _DHT11_H_
 #define _DHT11_H_
 
-extern uint8_t DHT11_data[4];
+extern float DHT11_humi, DHT11_temp;
 
 void DHT11_Init(void);
 void DHT11_OutputMode(void);
